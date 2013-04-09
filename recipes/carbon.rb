@@ -8,7 +8,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.graphite.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,8 +54,8 @@ else
 end
 
 template "#{node['graphite']['base_dir']}/conf/carbon.conf" do
-  owner node['apache']['user']
-  group node['apache']['group']
+  owner node['graphite']['user']
+  group node['graphite']['group']
   variables( :line_receiver_interface => node['graphite']['carbon']['line_receiver_interface'],
              :line_receiver_port => node['graphite']['carbon']['line_receiver_port'],
              :pickle_receiver_interface => node['graphite']['carbon']['pickle_receiver_interface'],
@@ -79,26 +79,26 @@ template "#{node['graphite']['base_dir']}/conf/carbon.conf" do
 end
 
 template "#{node['graphite']['base_dir']}/conf/storage-schemas.conf" do
-  owner node['apache']['user']
-  group node['apache']['group']
+  owner node['graphite']['user']
+  group node['graphite']['group']
 end
 
 directory node['graphite']['storage_dir'] do
-  owner node['apache']['user']
-  group node['apache']['group']
+  owner node['graphite']['user']
+  group node['graphite']['group']
   recursive true
 end
 
 %w{ log whisper }.each do |dir|
   directory "#{node['graphite']['storage_dir']}/#{dir}" do
-    owner node['apache']['user']
-    group node['apache']['group']
+    owner node['graphite']['user']
+    group node['graphite']['group']
   end
 end
 
 directory "#{node['graphite']['base_dir']}/lib/twisted/plugins/" do
-  owner node['apache']['user']
-  group node['apache']['group']
+  owner node['graphite']['user']
+  group node['graphite']['group']
   recursive true
 end
 

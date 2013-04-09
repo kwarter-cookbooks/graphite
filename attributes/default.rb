@@ -32,6 +32,9 @@ default['graphite']['carbon']['max_cache_size'] = "inf"
 default['graphite']['carbon']['max_creates_per_second'] = "inf"
 default['graphite']['carbon']['max_updates_per_second'] = "1000"
 
+default['graphite']['user'] = 'root'
+default['graphite']['group'] = 'root'
+
 case node['platform_family']
 when "debian"
   default['graphite']['carbon']['service_type'] = "runit"

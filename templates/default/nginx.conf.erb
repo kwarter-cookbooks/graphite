@@ -1,0 +1,53 @@
+upstream graphite_webapp {
+  server 127.0.0.1:<%= node[:graphite][:listen_port] %>;
+}
+
+<% if node[:graphite][:nginx][:ssl] %>
+server {
+  listen         <%= node[:graphite][:nginx][:port] %>;
+  server_name    <%= node[:graphite][:nginx][:server_names].join(' ') %>;
+  rewrite        ^ https://$server_name$request_uri? permanent;
+}
+<% end %>
+
+server {
+<% if node[:graphite][:nginx][:ssl] %>
+  listen <%= node[:graphite][:nginx][:ssl_port] %> ssl;
+<% else %>
+  listen <%= node[:graphite][:nginx][:port] %>;
+<% end %>
+  server_name <%= node[:graphite][:nginx][:server_names].join(' ') %>;
+
+<% unless node[:graphite][:nginx][:allow_ips].empty? %>
+<% node[:graphite][:nginx][:allow_ips].each do |ip| %>
+  allow <%= ip %>;
+<% end %>
+  deny all;
+<% end %>
+
+  <% if node[:graphite][:nginx][:ssl] -%>
+  ssl_certificate <%= @ssl_cert %>;
+  ssl_certificate_key <%= @ssl_key %>;
+  <% end %>
+
+  access_log <%= File.join(node[:nginx][:log_dir], 'graphite.access.log') %>;
+  error_log <%= File.join(node[:nginx][:log_dir], 'graphite.error.log') %> warn;
+
+  root /opt/graphite/webapp/content/;
+
+  location / {
+    try_files $uri @graphite_webapp;
+  }
+
+  location @graphite_webapp {
+    include /etc/nginx/fastcgi_params;
+
+    fastcgi_param   SCRIPT_FILENAME         '';
+    fastcgi_param   SCRIPT_NAME             '';
+
+    fastcgi_pass_header Authorization;
+    fastcgi_intercept_errors off;
+
+    fastcgi_pass   graphite_webapp;
+  }
+}

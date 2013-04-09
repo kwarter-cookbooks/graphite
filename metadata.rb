@@ -16,10 +16,10 @@ supports "oracle"
 supports "fedora"
 
 depends  "python"
-depends  "apache2"
 depends  "runit", "~> 1.0"
 depends  "memcached"
 
+suggests  "apache2"
 suggests "systemd"
 suggests "s6"
 suggests "graphiti"
