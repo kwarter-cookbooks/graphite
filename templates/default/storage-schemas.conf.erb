@@ -1,4 +1,12 @@
+[stats]
+pattern = ^stats\..*
+retentions = 10s:6h,1m:2d,10m:1y
+
+[chef]
+pattern = ^chef\..*
+retentions = 30m:3y
+
 [catchall]
 priority = 0
 pattern = ^.*
-retentions = 60:100800,900:63000
+retentions = 1m:3d,10m:3y
