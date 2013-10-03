@@ -44,6 +44,6 @@ template File.join(node['nginx']['dir'], 'sites-available', 'graphite') do
   notifies :reload, resources(:service => 'nginx')
 end
 
-nginx_site 'sensu' do
+nginx_site 'graphite' do
   enable true
 end
